@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+</nav>
+  <meta charset="UTF-8">
+  <title>Dashboard</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+</head>
+  <nav style="margin-bottom: 20px; background: #222; padding: 10px; border-radius: 10px;">
+  <a href="dashboard-user.html" style="color: white; margin: 0 10px;">🏠 Dashboard</a>
+  <a href="absen-wajah.html" style="color: white; margin: 0 10px;">📷 Absen Wajah</a>
+  <a href="absen-fingerprint.html" style="color: white; margin: 0 10px;">🔒 Fingerprint</a>
+  <a href="riwayat-absensi.html" style="color: white; margin: 0 10px;">📜 Riwayat</a>
+  <a href="logout.html" style="color: white; margin: 0 10px;">🚪 Logout</a>
+<body onload="showUserInfo()">
+  <div class="dashboard-container">
+    <h2 id="greeting"></h2>
+    <p>Welcome to your dashboard.</p>
+    <div id="roleMessage"></div>
+    <button class="btn-login" onclick="logout()">Logout</button>
+  </div>
+
+  <script>
+    function showUserInfo() {
+      const loggedIn = localStorage.getItem("isLoggedIn");
+      const username = localStorage.getItem("username");
+      const role = localStorage.getItem("role");
+
+      if (loggedIn !== "true") {
+        alert("Please login first.");
+        window.location.href = "index.html";
+        return;
+      }
+
+      document.getElementById("greeting").textContent = `Welcome, ${username} (${role})`;
+
+      const roleMsg = document.getElementById("roleMessage");
+      if (role === "admin") {
+        roleMsg.innerHTML = "<strong>👑 Admin Panel Access</strong>";
+      } else {
+        roleMsg.innerHTML = "<strong>👤 User Dashboard</strong>";
+      }
+    }
+
+    function logout() {
+      localStorage.clear();
+      window.location.href = "index.html";
+    }
+  </script>
+</body>
+</html>

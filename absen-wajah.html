@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Absen Scan Wajah</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background: linear-gradient(to right, #00c6ff, #0072ff);
+      color: white;
+      padding: 50px;
+    }
+    video {
+      border-radius: 20px;
+      width: 320px;
+      margin-bottom: 15px;
+    }
+    button {
+      padding: 12px 20px;
+      font-size: 16px;
+      background: #ffffff20;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #ffffff40;
+    }
+  </style>
+</head>
+<body>
+  <h2>Absen dengan Scan Wajah</h2>
+  <video id="video" autoplay muted></video><br />
+  <button onclick="absen()">📷 Absen Sekarang</button>
+  <p id="status">Memuat model wajah...</p>
+
+  <script src="face-api.min.js"></script>
+  <script>
+    const video = document.getElementById("video");
+    const status = document.getElementById("status");
+    let labeledDescriptors = [];
+
+    // 1. Load model
+    Promise.all([
+      faceapi.nets.tinyFaceDetector.loadFromUri("models"),
+      faceapi.nets.faceLandmark68Net.loadFromUri("models"),
+      faceapi.nets.faceRecognitionNet.loadFromUri("models")
+    ]).then(loadWajah);
+
+    // 2. Ambil wajah dari server
+    async function loadWajah() {
+      const res = await fetch("wajah.json");
+      const data = await res.json();
+
+      labeledDescriptors = data.map(item => {
+        return new faceapi.LabeledFaceDescriptors(
+          item.username,
+          [new Float32Array(item.descriptor)]
+        );
+      });
+
+      startVideo();
+    }
+
+    // 3. Start kamera
+    function startVideo() {
+      navigator.mediaDevices.getUserMedia({ video: {} })
+        .then(stream => {
+          video.srcObject = stream;
+          status.innerText = "Arahkan wajah ke kamera dan klik Absen";
+        })
+        .catch(err => {
+          status.innerText = "Gagal mengakses kamera!";
+          console.error(err);
+        });
+    }
+
+    // 4. Proses absen
+    async function absen() {
+      const detection = await faceapi
+        .detectSingleFace(video, new faceapi.TinyFaceDetectorOptions())
+        .withFaceLandmarks()
+        .withFaceDescriptor();
+
+      if (!detection) {
+        status.innerText = "❌ Wajah tidak terdeteksi!";
+        return;
+      }
+
+      const faceMatcher = new faceapi.FaceMatcher(labeledDescriptors, 0.5);
+      const bestMatch = faceMatcher.findBestMatch(detection.descriptor);
+
+      if (bestMatch.label !== "unknown") {
+        const waktu = new Date().toLocaleString();
+        status.innerText = `✅ Absen berhasil oleh ${bestMatch.label} (${waktu})`;
+
+        // Simpan absen ke PHP
+        fetch("simpan-absensi.php", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            username: bestMatch.label,
+            waktu
+          })
+        });
+      } else {
+        status.innerText = "❌ Wajah tidak cocok dengan data!";
+      }
+    }
+  </script>
+</body>
+</html>

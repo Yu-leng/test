@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Riwayat Absensi</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(to right, #232526, #414345);
+      color: white;
+      padding: 30px;
+      text-align: center;
+    }
+    h2 {
+      margin-bottom: 20px;
+    }
+    table {
+      margin: 0 auto;
+      width: 90%;
+      border-collapse: collapse;
+      background: #fff;
+      color: #000;
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    th, td {
+      padding: 12px 20px;
+      border-bottom: 1px solid #ccc;
+    }
+    th {
+      background: #444;
+      color: white;
+    }
+    tr:hover {
+      background-color: #f2f2f2;
+    }
+    .back {
+      margin-top: 20px;
+      background: #fff;
+      color: #000;
+      padding: 10px 20px;
+      text-decoration: none;
+      border-radius: 10px;
+    }
+    .back:hover {
+      background: #eee;
+    }
+  </style>
+</head>
+<body>
+  <h2>Riwayat Absensi</h2>
+  <table id="tabel-absensi">
+    <tr>
+      <th>Username</th>
+      <th>Waktu</th>
+    </tr>
+  </table>
+  <a class="back" href="dashboard-user.html">⬅ Kembali ke Dashboard</a>
+
+  <script>
+    fetch("absensi.json")
+      .then(res => res.json())
+      .then(data => {
+        const tabel = document.getElementById("tabel-absensi");
+        data.reverse().forEach(absen => {
+          const row = tabel.insertRow(-1);
+          const cellUser = row.insertCell(0);
+          const cellTime = row.insertCell(1);
+          cellUser.textContent = absen.username;
+          cellTime.textContent = absen.waktu;
+        });
+      })
+      .catch(() => {
+        const tabel = document.getElementById("tabel-absensi");
+        const row = tabel.insertRow(-1);
+        const cell = row.insertCell(0);
+        cell.colSpan = 2;
+        cell.textContent = "Tidak ada data absensi.";
+      });
+  </script>
+</body>
+</html>

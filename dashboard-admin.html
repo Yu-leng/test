@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Dashboard Admin</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(to right, #2c3e50, #4ca1af);
+      color: #fff;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 80px auto;
+      background: rgba(0, 0, 0, 0.2);
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      text-align: center;
+    }
+
+    h2 {
+      font-size: 28px;
+      margin-bottom: 20px;
+    }
+
+    #user-info {
+      font-size: 18px;
+      margin-bottom: 30px;
+    }
+
+    .btn {
+      display: inline-block;
+      margin: 10px;
+      padding: 12px 25px;
+      background-color: #ffffff20;
+      border: 1px solid #ffffff40;
+      border-radius: 10px;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.3s;
+      text-decoration: none;
+    }
+
+    .btn:hover {
+      background-color: #ffffff40;
+    }
+
+    .role {
+      font-style: italic;
+      font-size: 14px;
+      color: #ddd;
+    }
+  </style>
+</head>
+<body>
+    <nav style="margin-bottom: 20px; background: #222; padding: 10px; border-radius: 10px;">
+  <a href="dashboard-user.html" style="color: white; margin: 0 10px;">🏠 Dashboard</a>
+  <a href="absen-wajah.html" style="color: white; margin: 0 10px;">📷 Absen Wajah</a>
+  <a href="absen-fingerprint.html" style="color: white; margin: 0 10px;">🔒 Fingerprint</a>
+  <a href="riwayat-absensi.html" style="color: white; margin: 0 10px;">📜 Riwayat</a>
+  <a href="logout.html" style="color: white; margin: 0 10px;">🚪 Logout</a>
+</nav>
+  <div class="container">
+    <h2>Dashboard Admin</h2>
+    <p id="user-info"></p>
+    <div class="role" id="role-info"></div>
+
+    <div>
+      <a class="btn" href="edit-profil.html">✏️ Edit Profil</a>
+      <button class="btn" onclick="logout()">🚪 Logout</button>
+    </div>
+  </div>
+
+  <script>
+    const user = JSON.parse(localStorage.getItem("user"));
+    if (!user || user.role !== "admin") {
+      window.location.href = "index.html";
+    } else {
+      document.getElementById("user-info").innerText = `Selamat datang, ${user.username}!`;
+      document.getElementById("role-info").innerText = `Role: ${user.role.toUpperCase()}`;
+    }
+
+    function logout() {
+      localStorage.removeItem("user");
+      window.location.href = "index.html";
+    }
+  </script>
+</body>
+</html>

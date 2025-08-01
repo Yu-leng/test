@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Registrasi Wajah</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background: linear-gradient(to right, #8e2de2, #4a00e0);
+      color: white;
+      padding: 50px;
+    }
+    video {
+      border-radius: 20px;
+      width: 320px;
+      margin-bottom: 15px;
+    }
+    input, button {
+      padding: 10px;
+      margin: 10px;
+      border-radius: 10px;
+      border: none;
+    }
+    button {
+      background: #ffffff20;
+      color: white;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    button:hover {
+      background: #ffffff40;
+    }
+  </style>
+</head>
+<body>
+  <h2>Registrasi Wajah Pengguna</h2>
+  <video id="video" autoplay muted></video><br />
+  <input type="text" id="username" placeholder="Masukkan username..." /><br />
+  <button onclick="simpanWajah()">📸 Simpan Wajah</button>
+  <p id="status">Memuat model wajah...</p>
+
+  <script src="face-api.min.js"></script>
+  <script>
+    const video = document.getElementById("video");
+    const status = document.getElementById("status");
+
+    // Load model
+    Promise.all([
+      faceapi.nets.tinyFaceDetector.loadFromUri("models"),
+      faceapi.nets.faceLandmark68Net.loadFromUri("models"),
+      faceapi.nets.faceRecognitionNet.loadFromUri("models")
+    ]).then(startVideo);
+
+    function startVideo() {
+      navigator.mediaDevices.getUserMedia({ video: {} })
+        .then(stream => {
+          video.srcObject = stream;
+          status.innerText = "Arahkan wajah ke kamera dan klik Simpan";
+        })
+        .catch(err => {
+          status.innerText = "Gagal mengakses kamera!";
+          console.error(err);
+        });
+    }
+
+    async function simpanWajah() {
+      const username = document.getElementById("username").value.trim();
+      if (!username) {
+        status.innerText = "⚠️ Masukkan username!";
+        return;
+      }
+
+      const detection = await faceapi
+        .detectSingleFace(video, new faceapi.TinyFaceDetectorOptions())
+        .withFaceLandmarks()
+        .withFaceDescriptor();
+
+      if (!detection) {
+        status.innerText = "❌ Wajah tidak terdeteksi!";
+        return;
+      }
+
+      const descriptor = Array.from(detection.descriptor);
+      status.innerText = "⏳ Menyimpan wajah...";
+
+      fetch("simpan-wajah.php", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, descriptor })
+      })
+        .then(res => res.json())
+        .then(data => {
+          if (data.success) {
+            status.innerText = "✅ Wajah berhasil disimpan!";
+          } else {
+            status.innerText = "❌ Gagal simpan wajah.";
+          }
+        });
+    }
+  </script>
+</body>
+</html>

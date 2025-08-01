@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard Pengguna</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #ff4ec1, #a65dfd);
+      color: #fff;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 20px;
+      padding-bottom: 100px; /* ruang untuk navbar bawah */
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 15px;
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+      backdrop-filter: blur(10px);
+    }
+
+    .card h2 {
+      margin-bottom: 10px;
+      font-size: 22px;
+    }
+
+    .card p {
+      margin-bottom: 20px;
+      font-size: 16px;
+    }
+
+    .btn-group {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .btn-group a {
+      background: #ff4ec1;
+      color: #fff;
+      padding: 12px;
+      border-radius: 10px;
+      text-decoration: none;
+      font-weight: bold;
+      transition: 0.2s;
+    }
+
+    .btn-group a:hover {
+      background: #e23ba9;
+    }
+
+    /* BOTTOM NAVBAR */
+    nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      width: 100%;
+      background: #111;
+      display: flex;
+      justify-content: space-around;
+      padding: 10px 0;
+      border-top-left-radius: 12px;
+      border-top-right-radius: 12px;
+      z-index: 999;
+    }
+
+    nav a {
+      color: white;
+      font-size: 12px;
+      text-decoration: none;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+    }
+
+    nav a:hover {
+      color: #ffd700;
+    }
+
+    @media(min-width: 768px) {
+      body {
+        align-items: center;
+      }
+
+      .card {
+        width: 400px;
+      }
+
+      .btn-group {
+        flex-direction: row;
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+
+      .btn-group a {
+        flex: 1 1 120px;
+        text-align: center;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Konten Utama -->
+  <div class="card">
+    <h2>Dashboard Pengguna</h2>
+    <p>Halo, <strong>user1</strong>!<br><em>Role: USER</em></p>
+
+    <div class="btn-group">
+      <a href="home.html">🏠 Home</a>
+      <a href="edit-profil.html">✏️ Edit Profil</a>
+      <a href="logout.php">🚪 Logout</a>
+    </div>
+  </div>
+
+  <!-- Navbar Bawah -->
+  <nav>
+    <a href="dashboard-user.html">🏠<br>Dashboard</a>
+    <a href="absen-wajah.html">📷<br>Wajah</a>
+    <a href="absen-fingerprint.html">🔒<br>Fingerprint</a>
+    <a href="riwayat-absensi.html">📜<br>Riwayat</a>
+    <a href="logout.php">🚪<br>Logout</a>
+  </nav>
+
+</body>
+</html>

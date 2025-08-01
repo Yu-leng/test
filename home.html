@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Home | Setelah Login</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 80px auto;
+      padding: 30px;
+      background-color: rgba(255, 255, 255, 0.05);
+      border-radius: 20px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+      text-align: center;
+    }
+
+    h2 {
+      margin-bottom: 10px;
+    }
+
+    .role {
+      font-style: italic;
+      margin-bottom: 30px;
+    }
+
+    .btn {
+      display: inline-block;
+      margin: 10px;
+      padding: 12px 24px;
+      background-color: #ffffff20;
+      border: 1px solid #ffffff30;
+      border-radius: 10px;
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+      transition: background 0.3s;
+    }
+
+    .btn:hover {
+      background-color: #ffffff40;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Selamat Datang!</h2>
+    <p id="user-info"></p>
+    <p class="role" id="role-info"></p>
+
+    <a class="btn" id="toDashboard">📂 Dashboard</a>
+    <a class="btn" href="edit-profil.html">✏️ Edit Profil</a>
+    <button class="btn" onclick="logout()">🚪 Logout</button>
+  </div>
+
+  <script>
+    const user = JSON.parse(localStorage.getItem("user"));
+    if (!user) {
+      window.location.href = "index.html";
+    } else {
+      document.getElementById("user-info").innerText = `Halo, ${user.username}!`;
+      document.getElementById("role-info").innerText = `Role: ${user.role.toUpperCase()}`;
+      
+      // Tentukan dashboard sesuai role
+      const dashboardLink = document.getElementById("toDashboard");
+      if (user.role === "admin") {
+        dashboardLink.href = "dashboard-admin.html";
+      } else {
+        dashboardLink.href = "dashboard-user.html";
+      }
+    }
+
+    function logout() {
+      localStorage.removeItem("user");
+      window.location.href = "index.html";
+    }
+  </script>
+</body>
+</html>

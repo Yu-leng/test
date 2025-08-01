@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Absen Fingerprint</title>
+  <link rel="stylesheet" href="toastify.min.css" />
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 60px;
+      background: linear-gradient(to right, #f7971e, #ffd200);
+      color: #333;
+    }
+    .fingerprint {
+      width: 100px;
+      height: 100px;
+      margin: 30px auto;
+      background: url('https://cdn-icons-png.flaticon.com/512/850/850960.png') no-repeat center;
+      background-size: contain;
+      cursor: pointer;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.1); opacity: 0.8; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    button {
+      padding: 12px 25px;
+      background: #333;
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #111;
+    }
+  </style>
+</head>
+<body>
+  <h2>Absen dengan Fingerprint (Simulasi)</h2>
+  <div class="fingerprint" onclick="scanFingerprint()"></div>
+  <button onclick="scanFingerprint()">🔒 Klik untuk Absen</button>
+
+  <script src="toastify.min.js"></script>
+  <script>
+    function scanFingerprint() {
+      const username = prompt("Masukkan username untuk simulasi fingerprint:");
+      if (!username) return;
+
+      Toastify({
+        text: "⏳ Memindai sidik jari...",
+        duration: 1500,
+        gravity: "top",
+        backgroundColor: "#333"
+      }).showToast();
+
+      setTimeout(() => {
+        // Simulasi fingerprint cocok jika username valid
+        if (username === "user1" || username === "admin") {
+          const waktu = new Date().toLocaleString();
+          fetch("simpan-absensi.php", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ username, waktu })
+          });
+
+          Toastify({
+            text: `✅ Fingerprint cocok! Absensi berhasil (${username})`,
+            duration: 3000,
+            gravity: "top",
+            style: { background: "green" }
+          }).showToast();
+        } else {
+          Toastify({
+            text: "❌ Fingerprint tidak dikenali!",
+            duration: 3000,
+            gravity: "top",
+            style: { background: "red" }
+          }).showToast();
+        }
+      }, 1600);
+    }
+  </script>
+</body>
+</html>
